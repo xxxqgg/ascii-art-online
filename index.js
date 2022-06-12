@@ -1,8 +1,9 @@
 var a;
 // const asciiChars = " .\'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 // const asciiChars = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrj "
-const asciiChars = " .:-=+*#%@"
-
+// const asciiChars = " .:-=+*#%@"
+const asciiChars = "@%#*+=-:."
+let blockSum, count
 const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
 
 async function getVideoElement() {
@@ -32,18 +33,21 @@ window.onload = async () => {
         let s = new Set()
         while (x < video.videoWidth && y < video.videoHeight) {
 
-            let count = 0
-            let blockSum = 0
+            count = 0
+            blockSum = 0
+            a = imageData
             for (let i = 0; i < selectorHeight; i++) {
                 for (let j = 0; j < selectorWidth; j++) {
                     count += 1
-                    r = imageData.data[((y + i) * video.videoHeight + (x + j)) * 4]
-                    g = imageData.data[((y + i) * video.videoHeight + (x + j)) * 4 + 1]
-                    b = imageData.data[((y + i) * video.videoHeight + (x + j)) * 4 + 2]
+                    // r = imageData.data[((y + i) * video.videoHeight + (x + j)) * 4]
+                    // g = imageData.data[((y + i) * video.videoHeight + (x + j)) * 4 + 1]
+                    // b = imageData.data[((y + i) * video.videoHeight + (x + j)) * 4 + 2]
                     s.add((x + j).toString() + "," + (y + i).toString())
-                    // r = imageData.data[((y + i) + video.videoWidth * (x + j)) * 4]
-                    // g = imageData.data[((y + i) + video.videoWidth * (x + j)) * 4 + 1]
-                    // b = imageData.data[((y + i) + video.videoWidth * (x + j)) * 4 + 2]
+                    // x+j = 0, y+i = 1,
+                    // console.log(x + j, y + i, b)
+                    r = imageData.data[((x + j) + video.videoWidth * (y + i)) * 4]
+                    g = imageData.data[((x + j) + video.videoWidth * (y + i)) * 4 + 1]
+                    b = imageData.data[((x + j) + video.videoWidth * (y + i)) * 4 + 2]
                     // s.add(((y + i) * video.videoHeight + (x + j)) * 4)
                     // s.add(((y + i) * video.videoHeight + (x + j)) * 4 + 1)
                     // s.add(((y + i) * video.videoHeight + (x + j)) * 4 + 2)
@@ -52,6 +56,8 @@ window.onload = async () => {
                     blockSum += gray
                 }
             }
+            // return
+
             let greyLevel = Math.floor(blockSum / count / 256 * asciiChars.length)
             displayString += asciiChars[greyLevel] + ' '
 
@@ -85,7 +91,7 @@ window.onload = async () => {
 
 function getImage() {
     const img = document.createElement('img')
-    img.src = './img1.png'
+    img.src = './imgs/img1.png'
     img.hidden = false
     document.body.append(img)
 
